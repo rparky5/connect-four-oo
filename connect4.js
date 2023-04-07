@@ -8,14 +8,28 @@
 
 
 class Game {
-  constructor(height, width) {
+  constructor(height=6, width=7) {
     this.height = height;
     this.width = width;
     this.board = [];
     this.currPlayer = 1;
     this.makeBoard();
     this.makeHtmlBoard();
+    this.makeButton();
     console.log(this.board)
+  }
+
+  makeButton() {
+    const btn = document.querySelector('button');
+
+    btn.addEventListener('click', () => {
+      new Game();
+      const top = document.getElementById('column-top');
+      top.removeAttribute('disabled');
+      // this.makeBoard.bind(this);
+      // this.makeHtmlBoard.bind(this);
+      console.log('this=', this);
+    })
   }
 
   makeBoard() {
@@ -26,10 +40,12 @@ class Game {
 
   makeHtmlBoard() {
     const htmlBoard = document.getElementById('board');
+    htmlBoard.innerHTML = '';
 
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
     top.setAttribute('id', 'column-top');
+    top.disabled = true;
     top.addEventListener('click', this.handleClick.bind(this));
 
     for (let x = 0; x < this.width; x++) {
@@ -49,7 +65,6 @@ class Game {
         cell.setAttribute('id', `c-${y}-${x}`);
         row.append(cell);
       }
-      console.log(Array.from(row.children).length)
 
       htmlBoard.append(row);
     }
@@ -119,7 +134,6 @@ class Game {
       // Check four cells to see if they're all color of current player
       //  - cells: list of four (y, x) cells
       //  - returns true if all are legal coordinates & all match currPlayer
-      console.log("this=",this)
       return cells.every(
         ([y, x]) =>
           y >= 0 &&
